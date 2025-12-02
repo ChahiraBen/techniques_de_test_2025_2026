@@ -433,7 +433,8 @@ def test_triangulate_algorithmic_failure(client, valid_uuid):
     )
 
     # Mocker l'algorithme pour qu'il lève une exception
-    with patch('triangulator.core.triangulate') as mock_triangulate:
+    # IMPORTANT : patcher là où la fonction est UTILISÉE, pas où elle est définie
+    with patch('triangulator.app.triangulate') as mock_triangulate:
         mock_triangulate.side_effect = RuntimeError("Triangulation failed")
 
         response = client.get(f'/triangulation/{valid_uuid}')
