@@ -19,22 +19,23 @@ Format binaire Triangles (little-endian) :
 """
 
 import struct
+
 import pytest
-import math
+
 from triangulator.binary import (
     decode_pointset,
-    encode_pointset,
     decode_triangles,
+    encode_pointset,
     encode_triangles,
 )
-
 
 #Test décodage PointSet: 
 
 def test_decode_valid_pointset(valid_pointset_binary, triangle_points):
-    """Test du décodage d'un PointSet valide
+    """Test du décodage d'un PointSet valide.
+
     Pourquoi : vérifier que l'interprétation du format binaire est correcte
-    et que les coordonnées sont restaurées exactement
+    et que les coordonnées sont restaurées exactement.
     """
     points = decode_pointset(valid_pointset_binary)
 
@@ -42,7 +43,7 @@ def test_decode_valid_pointset(valid_pointset_binary, triangle_points):
         f"Expected {len(triangle_points)} points, got {len(points)}"
 
     for i, ((x_expected, y_expected), (x_actual, y_actual)) in enumerate(
-        zip(triangle_points, points)
+        zip(triangle_points, points, strict=False)
     ):
         assert x_actual == pytest.approx(x_expected, abs=1e-6), \
             f"Point {i}: X coordinate mismatch"
@@ -115,7 +116,7 @@ def test_decode_square_pointset(square_points):
 
     assert len(points) == 4
     for i, ((x_exp, y_exp), (x_act, y_act)) in enumerate(
-        zip(square_points, points)
+        zip(square_points, points, strict=False)
     ):
         assert x_act == pytest.approx(x_exp), f"Point {i} X mismatch"
         assert y_act == pytest.approx(y_exp), f"Point {i} Y mismatch"
@@ -188,7 +189,7 @@ def test_encode_pointset_with_negative_coords():
 
     # Vérifier le décodage pour confirmer
     decoded = decode_pointset(buffer)
-    for (x_exp, y_exp), (x_act, y_act) in zip(points, decoded):
+    for (x_exp, y_exp), (x_act, y_act) in zip(points, decoded, strict=False):
         assert x_act == pytest.approx(x_exp)
         assert y_act == pytest.approx(y_exp)
 
@@ -202,7 +203,7 @@ def test_encode_pointset_with_large_coords():
     buffer = encode_pointset(points)
 
     decoded = decode_pointset(buffer)
-    for (x_exp, y_exp), (x_act, y_act) in zip(points, decoded):
+    for (x_exp, y_exp), (x_act, y_act) in zip(points, decoded, strict=False):
         # Tolérance relative pour les grandes valeurs
         assert x_act == pytest.approx(x_exp, rel=1e-5)
         assert y_act == pytest.approx(y_exp, rel=1e-5)
@@ -219,7 +220,7 @@ def test_roundtrip_pointset_triangle(triangle_points):
     decoded = decode_pointset(buffer)
 
     assert len(decoded) == len(triangle_points)
-    for (x_exp, y_exp), (x_act, y_act) in zip(triangle_points, decoded):
+    for (x_exp, y_exp), (x_act, y_act) in zip(triangle_points, decoded, strict=False):
         assert x_act == pytest.approx(x_exp)
         assert y_act == pytest.approx(y_exp)
 
@@ -233,7 +234,7 @@ def test_roundtrip_pointset_square(square_points):
     decoded = decode_pointset(buffer)
 
     assert len(decoded) == len(square_points)
-    for (x_exp, y_exp), (x_act, y_act) in zip(square_points, decoded):
+    for (x_exp, y_exp), (x_act, y_act) in zip(square_points, decoded, strict=False):
         assert x_act == pytest.approx(x_exp)
         assert y_act == pytest.approx(y_exp)
 
@@ -247,7 +248,7 @@ def test_roundtrip_pointset_grid(grid_points):
     decoded = decode_pointset(buffer)
 
     assert len(decoded) == len(grid_points)
-    for (x_exp, y_exp), (x_act, y_act) in zip(grid_points, decoded):
+    for (x_exp, y_exp), (x_act, y_act) in zip(grid_points, decoded, strict=False):
         assert x_act == pytest.approx(x_exp)
         assert y_act == pytest.approx(y_exp)
 
@@ -267,7 +268,7 @@ def test_decode_valid_triangles(valid_triangles_binary, square_points):
     assert len(points) == len(square_points), \
         f"Expected {len(square_points)} points, got {len(points)}"
 
-    for (x_exp, y_exp), (x_act, y_act) in zip(square_points, points):
+    for (x_exp, y_exp), (x_act, y_act) in zip(square_points, points, strict=False):
         assert x_act == pytest.approx(x_exp)
         assert y_act == pytest.approx(y_exp)
 
@@ -339,7 +340,7 @@ def test_encode_valid_triangles(square_points):
     assert len(decoded_triangles) == len(triangles)
 
     for (i_exp, j_exp, k_exp), (i_act, j_act, k_act) in zip(
-        triangles, decoded_triangles
+        triangles, decoded_triangles, strict=False
     ):
         assert i_act == i_exp
         assert j_act == j_exp
@@ -405,13 +406,13 @@ def test_roundtrip_triangles_square(square_points):
 
     # Vérifier les points
     assert len(points_out) == len(square_points)
-    for (x_exp, y_exp), (x_act, y_act) in zip(square_points, points_out):
+    for (x_exp, y_exp), (x_act, y_act) in zip(square_points, points_out, strict=False):
         assert x_act == pytest.approx(x_exp)
         assert y_act == pytest.approx(y_exp)
 
     # Vérifier les triangles
     assert len(triangles_out) == len(triangles_in)
-    for tri_exp, tri_act in zip(triangles_in, triangles_out):
+    for tri_exp, tri_act in zip(triangles_in, triangles_out, strict=False):
         assert tri_act == tri_exp
 
 
@@ -428,7 +429,7 @@ def test_roundtrip_triangles_grid(grid_points):
     assert len(points_out) == len(grid_points)
     assert len(triangles_out) == len(triangles_in)
 
-    for tri_exp, tri_act in zip(triangles_in, triangles_out):
+    for tri_exp, tri_act in zip(triangles_in, triangles_out, strict=False):
         assert tri_act == tri_exp
 
 

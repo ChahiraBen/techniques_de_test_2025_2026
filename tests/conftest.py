@@ -7,17 +7,16 @@ Ce module contient les fixtures pytest réutilisables pour :
 - Configurer le client Flask de test
 """
 
-import struct
 import math
 import random
-from typing import List, Tuple
-import pytest
+import struct
 
+import pytest
 
 # FIXTURES : Données de points (géométrie pure)
 
 @pytest.fixture
-def triangle_points() -> List[Tuple[float, float]]:
+def triangle_points() -> list[tuple[float, float]]:
     """Points formant un triangle simple.
 
     Pourquoi : cas de base pour tester un triangle valide.
@@ -26,7 +25,7 @@ def triangle_points() -> List[Tuple[float, float]]:
 
 
 @pytest.fixture
-def collinear_points() -> List[Tuple[float, float]]:
+def collinear_points() -> list[tuple[float, float]]:
     """Points alignés sur une même ligne.
 
     Pourquoi : aucun triangle ne peut être formé, teste les cas dégénérés.
@@ -35,7 +34,7 @@ def collinear_points() -> List[Tuple[float, float]]:
 
 
 @pytest.fixture
-def square_points() -> List[Tuple[float, float]]:
+def square_points() -> list[tuple[float, float]]:
     """Points formant un carré.
 
     Pourquoi : devrait produire exactement 2 triangles non-chevauchants.
@@ -44,7 +43,7 @@ def square_points() -> List[Tuple[float, float]]:
 
 
 @pytest.fixture
-def pentagon_points() -> List[Tuple[float, float]]:
+def pentagon_points() -> list[tuple[float, float]]:
     """Points formant un pentagone régulier.
 
     Pourquoi : teste un cas plus complexe avec plusieurs triangles.
@@ -59,7 +58,7 @@ def pentagon_points() -> List[Tuple[float, float]]:
 
 
 @pytest.fixture
-def grid_points() -> List[Tuple[float, float]]:
+def grid_points() -> list[tuple[float, float]]:
     """Points disposés en grille 3x3.
 
     Pourquoi : teste la triangulation d'une distribution régulière.
@@ -72,7 +71,7 @@ def grid_points() -> List[Tuple[float, float]]:
 
 
 @pytest.fixture
-def random_points_10() -> List[Tuple[float, float]]:
+def random_points_10() -> list[tuple[float, float]]:
     """10 points aléatoires avec seed fixe.
 
     Pourquoi : teste une distribution aléatoire reproductible.
@@ -82,7 +81,7 @@ def random_points_10() -> List[Tuple[float, float]]:
 
 
 @pytest.fixture
-def random_points_100() -> List[Tuple[float, float]]:
+def random_points_100() -> list[tuple[float, float]]:
     """100 points aléatoires avec seed fixe.
 
     Pourquoi : pour les tests de performance ou de robustesse.
@@ -92,7 +91,7 @@ def random_points_100() -> List[Tuple[float, float]]:
 
 
 @pytest.fixture
-def duplicate_points() -> List[Tuple[float, float]]:
+def duplicate_points() -> list[tuple[float, float]]:
     """Points contenant des doublons.
 
     Pourquoi : teste le comportement avec des points identiques.
@@ -101,7 +100,7 @@ def duplicate_points() -> List[Tuple[float, float]]:
 
 
 @pytest.fixture
-def two_points() -> List[Tuple[float, float]]:
+def two_points() -> list[tuple[float, float]]:
     """Seulement 2 points.
 
     Pourquoi : insuffisant pour former un triangle, devrait retourner 0 triangle.
@@ -110,7 +109,7 @@ def two_points() -> List[Tuple[float, float]]:
 
 
 @pytest.fixture
-def empty_points() -> List[Tuple[float, float]]:
+def empty_points() -> list[tuple[float, float]]:
     """Aucun point.
 
     Pourquoi : cas limite, devrait retourner 0 triangle.
@@ -301,11 +300,11 @@ def invalid_uuid() -> str:
 
 @pytest.fixture
 def binary_encoder():
-    """Helper pour encoder un PointSet en binaire.
+    """Encode un PointSet en format binaire.
 
     Pourquoi : évite la duplication de code dans les tests.
     """
-    def encode(points: List[Tuple[float, float]]) -> bytes:
+    def encode(points: list[tuple[float, float]]) -> bytes:
         buffer = struct.pack('<I', len(points))
         for x, y in points:
             buffer += struct.pack('<ff', x, y)
@@ -315,11 +314,11 @@ def binary_encoder():
 
 @pytest.fixture
 def binary_decoder():
-    """Helper pour décoder un PointSet depuis binaire.
+    """Décode un PointSet depuis son format binaire.
 
     Pourquoi : évite la duplication de code dans les tests.
     """
-    def decode(buffer: bytes) -> List[Tuple[float, float]]:
+    def decode(buffer: bytes) -> list[tuple[float, float]]:
         # Cette fonction sera implémentée dans le code de production
         # Pour l'instant, c'est un placeholder pour les tests
         from triangulator.binary import decode_pointset
@@ -329,13 +328,13 @@ def binary_decoder():
 
 @pytest.fixture
 def triangles_encoder():
-    """Helper pour encoder des Triangles en binaire.
+    """Encode des Triangles en format binaire.
 
     Pourquoi : évite la duplication de code dans les tests.
     """
     def encode(
-        points: List[Tuple[float, float]],
-        triangles: List[Tuple[int, int, int]]
+        points: list[tuple[float, float]],
+        triangles: list[tuple[int, int, int]]
     ) -> bytes:
         # Partie 1 : PointSet
         buffer = struct.pack('<I', len(points))

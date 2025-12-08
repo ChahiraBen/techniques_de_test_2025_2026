@@ -27,15 +27,15 @@ API PointSetManager (selon point_set_manager.yml) :
         - 503 : application/json
 """
 
-import pytest
 import json
 import struct
+from unittest.mock import patch
+
+import pytest
 import responses
-from unittest.mock import patch, Mock
+
 from triangulator.app import create_app
 
-
- 
 # Fixtures : Application Flask
  
 
@@ -204,8 +204,10 @@ def test_triangulate_invalid_uuid_format(client, invalid_uuid):
     error = json.loads(response.data)
     assert 'code' in error, "Error response should have 'code' field"
     assert 'message' in error, "Error response should have 'message' field"
-    assert 'uuid' in error['message'].lower() or 'invalid' in error['message'].lower(), \
-        "Error message should mention UUID or invalid format"
+    assert (
+        'uuid' in error['message'].lower() or
+        'invalid' in error['message'].lower()
+    ), "Error message should mention UUID or invalid format"
 
 
 def test_triangulate_missing_uuid(client):
@@ -433,7 +435,7 @@ def test_triangulate_algorithmic_failure(client, valid_uuid):
     )
 
     # Mocker l'algorithme pour qu'il lève une exception
-    with patch('triangulator.core.triangulate') as mock_triangulate:
+    with patch('triangulator.app.triangulate') as mock_triangulate:
         mock_triangulate.side_effect = RuntimeError("Triangulation failed")
 
         response = client.get(f'/triangulation/{valid_uuid}')
