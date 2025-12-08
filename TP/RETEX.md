@@ -4,9 +4,9 @@
 
 Ce projet m'a permis de mettre en pratique une approche test-first sur un composant complet, de l'algorithme mathématique jusqu'à l'API HTTP. L'implémentation d'un algorithme de triangulation de Delaunay (Bowyer-Watson) couplée à une sérialisation binaire custom a représenté un défi technique intéressant. Le résultat final compte 93 tests pour environ 500 lignes de code de production, ce qui témoigne de l'importance accordée à la validation.
 
----
 
-## 2. Ce qui a bien fonctionné ✅
+
+## 2. Ce qui a bien fonctionné
 
 ### L'approche test-first
 
@@ -35,9 +35,9 @@ Marquer les tests de performance avec `@pytest.mark.perf` était une excellente 
 
 Les budgets de temps définis dans les tests de perf m'ont permis de détecter des régressions : quand j'ai refactoré `_in_circumcircle()`, le test `test_perf_triangulate_100_points()` a immédiatement montré que j'avais ralenti l'algorithme.
 
----
+ 
 
-## 3. Difficultés rencontrées ⚠️
+## 3. Difficultés rencontrées
 
 ### Implémentation de l'algorithme de Delaunay
 
@@ -71,18 +71,18 @@ Certains cas limites ont nécessité des décisions de design que je n'avais pas
 
 **PointSet vide** : J'ai choisi de retourner 0 triangle pour un ensemble vide plutôt qu'une erreur, ce qui est logique mathématiquement mais aurait pu être une 400 Bad Request au niveau API.
 
----
+ 
 
-## 4. Écart entre le plan initial et la réalité 🔄
+## 4. Écart entre le plan initial et la réalité
 
 ### Ce qui a suivi le plan
 
 Mon PLAN.md était plutôt bon dans l'ensemble :
 
-✅ **Structure des tests** : La séparation unit/performance a été respectée
-✅ **Cas de test prévus** : < 3 points, colinéaires, doublons, NaN/Inf étaient bien dans le plan
-✅ **Organisation Make** : Les targets `make test`, `make unit_test`, `make perf_test` correspondent exactement au plan
-✅ **Couverture** : L'objectif ≥90% mentionné dans le plan est atteint
+ **Structure des tests** : La séparation unit/performance a été respectée
+ **Cas de test prévus** : < 3 points, colinéaires, doublons, NaN/Inf étaient bien dans le plan
+ **Organisation Make** : Les targets `make test`, `make unit_test`, `make perf_test` correspondent exactement au plan
+ **Couverture** : L'objectif ≥90% mentionné dans le plan est atteint
 
 ### Ce qui a évolué
 
@@ -101,7 +101,7 @@ Le PLAN.md ne mentionnait pas la création d'un `conftest.py` aussi volumineux. 
 **Algorithme choisi** :
 Le plan ne spécifiait pas quel algorithme utiliser. J'ai choisi Bowyer-Watson car il était le plus documenté, mais avec le recul, un algorithme incrémental optimisé aurait été plus performant.
 
----
+ 
 
 ## 5. Ce que je ferais différemment 🔧
 
@@ -154,9 +154,9 @@ Les tests de performance mesurent le temps, mais pas la mémoire. Pour 10000 poi
 **Meilleure approche** :
 J'aurais dû commencer par implémenter un algorithme naïf O(n³) qui fonctionne, valider tous les tests, puis optimiser. Au lieu de ça, j'ai essayé d'implémenter directement Bowyer-Watson, ce qui a causé des bugs difficiles à isoler.
 
----
+ 
 
-## 6. Leçons apprises 📚
+## 6. Leçons apprises 
 
 ### Technique
 
@@ -169,8 +169,8 @@ J'aurais dû commencer par implémenter un algorithme naïf O(n³) qui fonctionn
 ### Méthodologie
 
 **Test-first : Oui, mais...**
-- ✅ **Avantages** : Design plus propre, couverture naturellement élevée, refactoring en confiance
-- ⚠️ **Inconvénients** : Peut ralentir au début, tentation d'écrire trop de tests
+-  **Avantages** : Design plus propre, couverture naturellement élevée, refactoring en confiance
+-  **Inconvénients** : Peut ralentir au début, tentation d'écrire trop de tests
 
 **Mon avis** : Pour du code algorithmique complexe (comme la triangulation), test-first est très rentable. Pour du code simple (getters/setters), c'est de l'over-engineering.
 
@@ -183,9 +183,9 @@ J'ai 100% de couverture sur certains modules, mais ça ne garantit pas que le co
 
 **Docstrings** : Écrire "Pourquoi ce test existe" dans les docstrings (exemple : "Pourquoi : les coordonnées négatives sont géométriquement valides") a été super utile quand je suis revenu sur le code 2 semaines plus tard.
 
----
+ 
 
-## 7. Points d'amélioration futurs 🚀
+## 7. Points d'amélioration futurs 
 
 Si je devais continuer ce projet, voici mes priorités :
 
@@ -204,7 +204,7 @@ Si je devais continuer ce projet, voici mes priorités :
 2. **Triangulation contrainte** : Permettre de spécifier des arêtes obligatoires
 3. **Métriques** : Exposer des stats (temps de calcul, nombre de triangles, qualité du maillage)
 
----
+ 
 
 ## 8. Conclusion
 
